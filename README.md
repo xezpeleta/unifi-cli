@@ -6,7 +6,7 @@ Edit `unifi-backup.sh` file and change username/password.
 
 Now you can run the script:
 ```sh
-unifi-backup.sh
+./unifi-backup.sh
 ```
 
 The script will generate the file **unifi-backup.unf** with the current configuration.
