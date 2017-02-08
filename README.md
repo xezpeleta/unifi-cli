@@ -43,15 +43,9 @@ Now you can run the script:
 ./my-unifi-script.sh
 ```
 
-The script will generate the file **unifi-backup.unf** with the current configuration.
-
 ## Resources
 
-I'm using also the UniFi official library:
-
-```
-wget https://dl.ubnt.com/unifi/5.4.11-6cbeae59e7/unifi_sh_api
-```
+I'm using the [UniFi official library](https://dl.ubnt.com/unifi/5.4.11-6cbeae59e7/unifi_sh_api)
 
 The [jq](https://stedolan.github.io/jq/) JSON processor is required. In Debian/Ubuntu,
 you can install with `apt-get install jq`.
