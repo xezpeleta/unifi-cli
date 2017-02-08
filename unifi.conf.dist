@@ -1,0 +1,7 @@
+#! /bin/bash
+# Required variables
+
+username=admin
+password=unf
+baseurl=https://unificontroller:8443
+site=default

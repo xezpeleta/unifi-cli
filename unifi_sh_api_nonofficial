@@ -1,0 +1,44 @@
+###
+### Added by xezpeleta
+###
+
+# list devices
+unifi_list_dev() {
+    ${curl_cmd} --data "json={}" $baseurl/api/s/$site/stat/device
+}
+
+# list ap devices
+unifi_list_ap() {
+    ${curl_cmd} --data "json={'type':'uap'}" $baseurl/api/s/$site/stat/device
+}
+
+# reboot a device
+unifi_reboot_dev() {
+    if [ $# -lt 1 ] ; then
+        echo "Usage: $0 <mac>"
+    fi
+
+    mac=$1
+
+    ${curl_cmd} --data "json={'cmd':'restart', 'mac':'${mac}'}" $baseurl/api/s/$site/cmd/devmgr
+}
+
+# reboot all ap devices
+unifi_reboot_all_ap() {
+    # seconds to wait between AP reboots
+    wait=180
+    
+    if [ $# -gt 1 ] ; then
+        echo "Usage: $0"
+    fi
+    
+    # Get all APs on the site
+    ${curl_cmd} --data "json={'type':'uap'}" $baseurl/api/s/$site/stat/device | jq -r '.data[] | .mac' | while read mac
+    do
+        #mac=${mac%\"}
+        #mac=${mac#\"}
+        echo "Rebooting AP: $mac"
+        unifi_reboot_dev $mac
+        sleep $wait
+    done
+}
