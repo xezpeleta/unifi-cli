@@ -1,2 +1,4 @@
-# Ignore backups
-*unf
+# Credentials
+*.conf
+# Backup file
+*.unf
