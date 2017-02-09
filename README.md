@@ -1,4 +1,4 @@
-# unifi rolling reboot (non-official)
+# unifi extended sh api (non-official)
 
 I'm using these scripts to manage my Unifi devices.
 
@@ -10,6 +10,12 @@ delay between each reboot
 
 ### Reboot custom device
 `unifi_reboot_dev <mac-address>`: use it to reboot a custom device
+
+### Upgrade a custom device
+`unifi_upgrade_dev <mac-address>`: will upgrade a custom device
+
+### Perform a rolling upgrade
+`unifi_ap_rolling_upgrade`: use it to upgrade all your AP devices
 
 ### Configuration backup
 Using the `unifi_backup` function will save the backup to **unifi-backup.unf**
