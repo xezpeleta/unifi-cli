@@ -55,3 +55,13 @@ unifi_upgrade_dev() {
 
     ${curl_cmd} --data "json={'mac':'${mac}'}" $baseurl/api/s/$site/cmd/devmgr/upgrade
 }
+
+# upgrade all aps (rolling upgrade)
+unifi_ap_rolling_upgrade() {
+    ${curl_cmd} --data "json={'cmd':'set-rollupgrade'}" $baseurl/api/s/$site/cmd/devmgr/
+}
+
+# abort rolling upgrade
+unifi_ap_rolling_upgrade_cancel() {
+    ${curl_cmd} --data "json={'cmd':'unset-rollupgrade'}" $baseurl/api/s/$site/cmd/devmgr/
+}
