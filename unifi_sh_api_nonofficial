@@ -42,3 +42,16 @@ unifi_reboot_all_ap() {
         sleep $wait
     done
 }
+
+
+# upgrade device
+unifi_upgrade_dev() {
+    if [ $# -lt 1 ] ; then
+	echo "Usage: $0 <mac>"
+	return
+    fi
+    
+    mac=$1
+
+    ${curl_cmd} --data "json={'mac':'${mac}'}" $baseurl/api/s/$site/cmd/devmgr/upgrade
+}
