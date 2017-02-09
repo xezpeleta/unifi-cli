@@ -15,12 +15,12 @@ delay between each reboot
 Using the `unifi_backup` function will save the backup to **unifi-backup.unf**
 
 ### List AP devices
-`unifi-list-ap` will show you a raw json related to all your AP devices
+`unifi_list_ap` will show you a raw json related to all your AP devices
 
 You can parse it yourself using `jq` to obtain your custom data:
 
 ```
-unifi-list-ap | jq -r '.data[] | select(.type=="uap") | [.name, .mac]'
+unifi_list_ap | jq -r '.data[] | select(.type=="uap") | [.name, .mac]'
 ```
 
 ## Configuration
