@@ -1,0 +1,145 @@
+#! /bin/bash
+
+## Config
+. unifi.conf
+
+## Include the API libraries
+. unifi_sh_api
+. unifi_sh_api_nonofficial
+
+VERSION="0.1.2_alpha"
+OPTIONS=$(getopt  -o Rdhv \
+                  --long show:,list::,reboot::,upgrade::,version \
+                  -n "$0" -- "$@")
+
+usage () {
+  echo "Usage: $0 command [options]"
+  echo -e "\nCommands:\n"
+  echo "    --show=[mac]                  show a custom device (mac-address)"
+  echo "    --list=[all|ap]               list all the devices (all) or just the access points (ap)"
+  echo "    --reboot=[mac]                reboot a custom device (mac-address) or all the devices (with -R)"
+  echo "    --upgrade=[mac]               upgrade a custom device (mac-address) or all the devices (with -R)"
+  echo -e "\nOptions:\n"
+  echo "    -R          enable rolling upgrade or rolling reboot"
+  echo "    -d          enable debug mode"
+  echo "    -h          show this help text"
+  echo "    -v          print version"
+  echo -e "\nExamples:\n"
+  echo "    --list ap                 will list your AP devices"
+  echo "    --reboot 03:4d:ff:10:4e   will reboot that device"
+  echo "    --upgrade -R              will start a rolling upgrade"
+  echo -e "\n"
+}
+
+# No args passed?
+if [ "$#" -lt 1 ]
+then
+  echo "$0: missing args"
+  usage
+  exit 1
+fi
+
+# First argument must start with a dash
+arg=$1
+if [ ${arg:0:1} != "-" ]
+then
+  echo "$0: invalid command -- '$1'"
+  usage
+  exit 1
+fi
+
+version () {
+  echo $VERSION
+}
+
+show () {
+  #unifi_login
+  #unifi_logout
+  echo "Sorry, not implemented yet"
+}
+
+list () {
+  unifi_login
+
+  if [ $# -lt 1 ] || [ "$1" == "all" ] ; then
+    unifi_list_dev | python -m json.tool
+  else
+    unifi_list_ap | jq -r '.data[] | select(.type=="uap") | [.name, .mac]'
+  fi
+
+  unifi_logout
+}
+
+reboot () {
+  unifi_login > /dev/null ||
+    { echo "[ERROR] Login error"; exit 1; }
+
+  if [ $# -lt 1 ]; then
+    if [ "$ROLLING" == "true"]; then
+      unifi_reboot_all_ap
+    else
+      echo "Missing option -R. Aborting rolling reboot"
+    fi
+  else
+    unifi_reboot_dev $1
+  fi
+
+  unifi_logout > /dev/null ||
+    { echo "[ERROR] Logout error"; exit 1; }
+}
+
+upgrade () {
+  unifi_login > /dev/null ||
+    { echo "[ERROR] Login error"; exit 1; }
+
+  if [ $# -lt 1 ]; then
+    if [ "$ROLLING" == "true" ]; then
+      unifi_ap_rolling_upgrade
+    else
+      echo "Missing option -R. Aborting rolling upgrade"
+    fi
+  else
+    unifi_upgrade_dev $1
+  fi
+
+  unifi_logout > /dev/null ||
+    { echo "[ERROR] Logout error"; exit 1; }
+}
+
+eval set -- "$OPTIONS"
+
+ROLLING=false
+DEBUG=false
+while true; do
+  case "$1" in
+    --show )
+      # show a device
+      show $2; shift 2 ;;
+    --list )
+      case "$2" in
+        # list without arg
+        "") list; shift 2 ;;
+        # list with an arg
+        *)  list $2; shift 2 ;;
+      esac ;;
+    --reboot )
+      case "$2" in
+        # reboot a device
+        "") reboot; shift 2 ;;
+        # reboot all
+        *)  reboot $2; shift 2 ;;
+      esac ;;
+    --upgrade )
+      case "$2" in
+        "") upgrade; shift 2 ;;
+        # upgrade a custom device
+        *) upgrade $2; shift 2 ;;
+      esac ;;
+    -R )              ROLLING=true; shift ;;
+    -d | --debug )    DEBUG=true; shift ;;
+    -h | --help )     usage; shift ;;
+    -v | --version )  version; shift ;;
+    -- ) shift; break ;;
+    * ) echo "Unknown error"; exit 1 ;;
+  esac
+done
