@@ -33,6 +33,7 @@ if [ -f "$CONF" ]; then
   . $CONF
 elif [ -f "/etc/unifi/unifi.conf" ]; then
   CONF="/etc/unifi/unifi.conf"
+  DIR="/etc/unifi"
   . $CONF
 else
   echo "[ERROR] Config file not found"
