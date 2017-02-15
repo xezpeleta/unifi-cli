@@ -1,32 +1,18 @@
-# unifi extended sh api (non-official)
+# Unifi CLI (non-official)
 
-I'm using these scripts to manage my Unifi devices.
+## Instalation
 
-## What can I do?
+Install requirements:
 
-### Reboot all AP devices (rolling reboot)
-The function `unifi_reboot_all_ap` will reboot all your AP devices with a 3 minute
-delay between each reboot
+```sh
+apt-get update
+apt-get install curl jq
 
-### Reboot custom device
-`unifi_reboot_dev <mac-address>`: use it to reboot a custom device
+# Download Unifi CLI
+git clone https://github.com/xezpeleta/unifi-cli.git
 
-### Upgrade a custom device
-`unifi_upgrade_dev <mac-address>`: will upgrade a custom device
-
-### Perform a rolling upgrade
-`unifi_ap_rolling_upgrade`: use it to upgrade all your AP devices
-
-### Configuration backup
-Using the `unifi_backup` function will save the backup to **unifi-backup.unf**
-
-### List AP devices
-`unifi_list_ap` will show you a raw json related to all your AP devices
-
-You can parse it yourself using `jq` to obtain your custom data:
-
-```
-unifi_list_ap | jq -r '.data[] | select(.type=="uap") | [.name, .mac]'
+# Optional: add a link to /usr/local/bin
+ln -s <download-path>/unifi /usr/local/bin/unifi
 ```
 
 ## Configuration
@@ -42,16 +28,12 @@ baseurl=https://unificontroller:8443
 site=default
 ```
 
-Edit `my-unifi-script.sh` and uncomment/edit the example code.
+## Usage
 
-Now you can run the script:
 ```sh
-./my-unifi-script.sh
+./unifi
 ```
 
 ## Resources
 
 I'm using the [UniFi official library](https://dl.ubnt.com/unifi/5.4.11-6cbeae59e7/unifi_sh_api)
-
-The [jq](https://stedolan.github.io/jq/) JSON processor is required. In Debian/Ubuntu,
-you can install with `apt-get install jq`.
