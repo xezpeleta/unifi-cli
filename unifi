@@ -1,13 +1,6 @@
 #! /bin/bash
 
-## Config
-. unifi.conf
-
-## Include the API libraries
-. unifi_sh_api
-. unifi_sh_api_nonofficial
-
-VERSION="0.1.2_alpha"
+VERSION="0.1.3_alpha"
 OPTIONS=$(getopt  -o Rdhv \
                   --long show:,list::,reboot::,upgrade::,version \
                   -n "$0" -- "$@")
@@ -30,6 +23,26 @@ usage () {
   echo "    --upgrade -R              will start a rolling upgrade"
   echo -e "\n"
 }
+
+SCRIPT=$(realpath $0)
+DIR=$(dirname $SCRIPT)
+
+## Config
+CONF="$DIR/unifi.conf"
+if [ -f "$CONF" ]; then
+  . $CONF
+elif [ -f "/etc/unifi/unifi.conf" ]; then
+  CONF="/etc/unifi/unifi.conf"
+  . $CONF
+else
+  echo "[ERROR] Config file not found"
+  usage
+  exit 1
+fi
+
+## Include the API libraries
+. $DIR/unifi_sh_api
+. $DIR/unifi_sh_api_nonofficial
 
 # No args passed?
 if [ "$#" -lt 1 ]
