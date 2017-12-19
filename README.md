@@ -6,7 +6,7 @@ Install requirements:
 
 ```sh
 apt-get update
-apt-get install curl jq
+apt-get install curl jq realpath
 
 # Download Unifi CLI
 git clone https://github.com/xezpeleta/unifi-cli.git
