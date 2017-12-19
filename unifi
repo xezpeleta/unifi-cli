@@ -20,7 +20,7 @@ usage () {
   echo -e "\nExamples:\n"
   echo "    --list ap                 will list your AP devices"
   echo "    --reboot 03:4d:ff:10:4e   will reboot that device"
-  echo "    --upgrade -R              will start a rolling upgrade"
+  echo "    -R --upgrade              will start a rolling upgrade"
   echo -e "\n"
 }
 
