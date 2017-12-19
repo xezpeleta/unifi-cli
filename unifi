@@ -89,7 +89,7 @@ reboot () {
     { echo "[ERROR] Login error"; exit 1; }
 
   if [ $# -lt 1 ]; then
-    if [ "$ROLLING" == "true"]; then
+    if [ "$ROLLING" == "true" ]; then
       unifi_reboot_all_ap
     else
       echo "Missing option -R. Aborting rolling reboot"
